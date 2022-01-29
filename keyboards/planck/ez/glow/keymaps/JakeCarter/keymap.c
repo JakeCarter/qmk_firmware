@@ -4,11 +4,11 @@
 #endif
 #include "eeprom.h"
 
-enum planck_keycodes {
-    RGB_SLD = EZ_SAFE_RANGE,
+#include "text_edit_helpers.h"
 
+enum planck_keycodes {
     // CMD+Tab Replacements
-    WIN_NAV_NEXT,
+    WIN_NAV_NEXT = EZ_SAFE_RANGE,
     WIN_NAV_PREV,
 
     // Text Editing Macros
@@ -163,16 +163,10 @@ void rgb_matrix_indicators_user(void) {
     }
 }
 
-bool is_window_nav_active = false;
+static bool is_window_nav_active = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case RGB_SLD:
-            if (record->event.pressed) {
-                rgblight_mode(1);
-            }
-            return false;
-
         case LOWER:
             if (!record->event.pressed && is_window_nav_active) {
                 unregister_code(KC_LGUI); // CMD key-up
@@ -204,72 +198,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
-        case TE_SEL_WORD:
-            if (record->event.pressed) {
-                // Move cursor to end of word
-                register_code(KC_LALT);
-                register_code(KC_RIGHT);
-                unregister_code(KC_RIGHT);
-
-                // Select to start of word
-                register_code(KC_LSHIFT);
-                register_code(KC_LEFT);
-                unregister_code(KC_LEFT);
-                unregister_code(KC_LSHIFT);
-                unregister_code(KC_LALT);
-            }
+        case TE_SEL_WORD: te_select_word(record->event.pressed);
             break;
 
-        case TE_SEL_LINE:
-            if (record->event.pressed) {
-                // Move cursor to end of line
-                register_code(KC_LGUI);
-                register_code(KC_RIGHT);
-                unregister_code(KC_RIGHT);
-
-                // Select to start of word
-                register_code(KC_LSHIFT);
-                register_code(KC_LEFT);
-                unregister_code(KC_LEFT);
-                unregister_code(KC_LSHIFT);
-                unregister_code(KC_LGUI);
-            }
+        case TE_SEL_LINE: te_select_line(record->event.pressed);
             break;
 
-        case TE_XC_IND:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                SEND_STRING("]");
-                unregister_code(KC_LGUI);
-            }
+        case TE_XC_IND: te_indent(record->event.pressed);
             break;
 
-        case TE_XC_OND:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                SEND_STRING("[");
-                unregister_code(KC_LGUI);
-            }
+        case TE_XC_OND: te_outdent(record->event.pressed);
             break;
 
-        case TE_XC_MLD:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                register_code(KC_LALT);
-                SEND_STRING("]");
-                unregister_code(KC_LALT);
-                unregister_code(KC_LGUI);
-            }
+        case TE_XC_MLD: te_move_line_down(record->event.pressed);
             break;
 
-        case TE_XC_MLU:
-            if (record->event.pressed) {
-                register_code(KC_LGUI);
-                register_code(KC_LALT);
-                SEND_STRING("[");
-                unregister_code(KC_LALT);
-                unregister_code(KC_LGUI);
-            }
+        case TE_XC_MLU: te_move_line_up(record->event.pressed);
             break;
     }
     return true;
