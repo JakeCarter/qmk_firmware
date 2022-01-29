@@ -14,6 +14,12 @@ enum planck_keycodes {
     // Text Editing Macros
     TE_SEL_WORD,
     TE_SEL_LINE,
+
+    TE_XC_IND, // Xcode Indent (CMD+])
+    TE_XC_OND, // Xcode Outdent (CMD+[)
+
+    TE_XC_MLD, // Xcode Move Line Down (CMD+ALT+])
+    TE_XC_MLU, // Xcode Move Line Up (CMD+ALT+[)
 };
 
 enum planck_layers {
@@ -27,7 +33,11 @@ enum planck_layers {
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
+
 #define HYPER_ESC LT(_HYPER, KC_ESCAPE)
+#define HYPER_SPELL RALT(RGUI(RCTL(RSFT(KC_S))))
+#define HYPER_CLPBRD RALT(RGUI(RCTL(RSFT(KC_V))))
+#define HYPER_ALFRED RALT(RGUI(RCTL(RSFT(KC_SPACE))))
 
 #define LOCK RGUI(RCTL(KC_Q))
 
@@ -62,14 +72,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_HYPER] = LAYOUT_planck_grid(
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, RALT(RGUI(RCTL(RSFT(KC_S)))),KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RALT(RGUI(RCTL(RSFT(KC_V)))),KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RALT(RGUI(RCTL(RSFT(KC_SPACE)))),KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
+        KC_TRANSPARENT, KC_TRANSPARENT, HYPER_SPELL,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HYPER_CLPBRD,   KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HYPER_ALFRED,   KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
     ),
 
     [_TEXT_EDIT] = LAYOUT_planck_grid(
-        KC_TRANSPARENT, KC_TRANSPARENT, TE_SEL_WORD,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TE_SEL_LINE,    KC_TRANSPARENT, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_TRANSPARENT, TE_SEL_WORD,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TE_XC_MLU,      TE_XC_MLD,      KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TE_XC_OND,      TE_XC_IND,      TE_SEL_LINE,    KC_TRANSPARENT, KC_TRANSPARENT,
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
     ),
@@ -109,8 +119,8 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
                             {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {188,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
                             {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {188,255,255},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
 
-    [_TEXT_EDIT] =      {   {000,000,000}, {000,000,000}, {000,000,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
-                            {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,255}, {000,000,000}, {000,000,000},
+    [_TEXT_EDIT] =      {   {000,000,000}, {000,000,000}, {000,000,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {214,255,204}, {214,255,204}, {000,000,000}, {000,000,000}, {000,000,000},
+                            {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {214,218,204}, {214,218,204}, {000,000,255}, {000,000,000}, {000,000,000},
                             {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
                             {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
 };
@@ -136,7 +146,6 @@ void rgb_matrix_indicators_user(void) {
     if (g_suspend_state || keyboard_config.disable_layer_led) { return; }
     uint8_t enabled_layer = biton32(layer_state);
     switch (enabled_layer) {
-        case _BASE:
         case _LOWER:
         case _RAISE:
         case _ADJUST:
@@ -144,6 +153,8 @@ void rgb_matrix_indicators_user(void) {
         case _TEXT_EDIT:
             set_layer_color(enabled_layer);
             break;
+
+        case _BASE:
         default:
             if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
                 rgb_matrix_set_color_all(0, 0, 0);
@@ -225,6 +236,41 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             break;
 
+        case TE_XC_IND:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                SEND_STRING("]");
+                unregister_code(KC_LGUI);
+            }
+            break;
+
+        case TE_XC_OND:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                SEND_STRING("[");
+                unregister_code(KC_LGUI);
+            }
+            break;
+
+        case TE_XC_MLD:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LALT);
+                SEND_STRING("]");
+                unregister_code(KC_LALT);
+                unregister_code(KC_LGUI);
+            }
+            break;
+
+        case TE_XC_MLU:
+            if (record->event.pressed) {
+                register_code(KC_LGUI);
+                register_code(KC_LALT);
+                SEND_STRING("[");
+                unregister_code(KC_LALT);
+                unregister_code(KC_LGUI);
+            }
+            break;
     }
     return true;
 }
