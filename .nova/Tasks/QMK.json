@@ -1,0 +1,13 @@
+{
+  "actions" : {
+    "build" : {
+      "enabled" : true,
+      "script" : "qmk compile"
+    },
+    "run" : {
+      "enabled" : true,
+      "script" : "qmk compile\nqmk flash"
+    }
+  },
+  "identifier" : "356BD1DB-F80C-4852-9EA4-00FF7B18A637"
+}
