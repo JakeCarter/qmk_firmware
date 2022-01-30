@@ -41,6 +41,31 @@ enum planck_layers {
 
 #define LOCK RGUI(RCTL(KC_Q))
 
+// Same as `ko_make_basic()` but doesn't suppress the trigger_mods
+#define jc_ko_make_basic(trigger_mods_, trigger_key, replacement_key) \
+((const key_override_t){                                                                \
+    .trigger_mods                           = (trigger_mods_),                          \
+    .layers                                 = (~0),                                     \
+    .suppressed_mods                        = (0),                                      \
+    .options                                = (ko_options_default),                     \
+    .negative_mod_mask                      = (0),                                      \
+    .custom_action                          = NULL,                                     \
+    .context                                = NULL,                                     \
+    .trigger                                = (trigger_key),                            \
+    .replacement                            = (replacement_key),                        \
+    .enabled                                = NULL                                      \
+})
+
+// Replace HYPER_ESC with Shift+Tab if GUI is held down
+const key_override_t key_override_hyper_esc = jc_ko_make_basic(MOD_MASK_GUI, HYPER_ESC, RSFT(KC_TAB));
+
+// This globally defines all key overrides to be used
+const key_override_t **key_overrides = (const key_override_t *[]){
+    &key_override_hyper_esc,
+    NULL
+};
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_planck_grid(
         KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
@@ -86,7 +111,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
-extern bool g_suspend_state;
 extern rgb_config_t rgb_matrix_config;
 
 void keyboard_post_init_user(void) {
@@ -149,7 +173,7 @@ void set_layer_color(int layer) {
 }
 
 void rgb_matrix_indicators_user(void) {
-    if (g_suspend_state || keyboard_config.disable_layer_led) { return; }
+    if (keyboard_config.disable_layer_led) { return; }
     uint8_t enabled_layer = biton32(layer_state);
     switch (enabled_layer) {
         case _LOWER:
