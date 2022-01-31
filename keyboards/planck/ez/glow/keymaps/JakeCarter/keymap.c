@@ -5,19 +5,10 @@
 #include "eeprom.h"
 #include "g/keymap_combo.h"
 
-#include "text_edit_helpers.h"
 
-enum planck_keycodes {
-    // Text Editing Macros
-    TE_SEL_WORD = EZ_SAFE_RANGE,
-    TE_SEL_LINE,
-
-    TE_XC_IND, // Xcode Indent (CMD+])
-    TE_XC_OND, // Xcode Outdent (CMD+[)
-
-    TE_XC_MLD, // Xcode Move Line Down (CMD+ALT+])
-    TE_XC_MLU, // Xcode Move Line Up (CMD+ALT+[)
-};
+// enum planck_keycodes {
+//     MY_NEW_KEYCODE = EZ_SAFE_RANGE,
+// };
 
 enum planck_layers {
     _BASE,
@@ -25,7 +16,6 @@ enum planck_layers {
     _RAISE,
     _ADJUST,
     _HYPER,
-    _TEXT_EDIT,
 };
 
 #define LOWER MO(_LOWER)
@@ -35,6 +25,9 @@ enum planck_layers {
 #define HYPER_SPELL RALT(RGUI(RCTL(RSFT(KC_S))))
 #define HYPER_CLPBRD RALT(RGUI(RCTL(RSFT(KC_V))))
 #define HYPER_ALFRED RALT(RGUI(RCTL(RSFT(KC_SPACE))))
+
+#define RETURN_SHIFT MT(MOD_RSFT, KC_ENTER)
+
 #define LOCK RGUI(RCTL(KC_Q))
 
 // Same as `ko_make_basic()` but doesn't suppress the trigger_mods
@@ -67,17 +60,17 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_planck_grid(
-        KC_TAB,         KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
-        HYPER_ESC,      KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
-        KC_LSHIFT,      KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_UP,          MT(MOD_RSFT, KC_ENTER),
-        MO(_TEXT_EDIT), KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_SLASH,       KC_LEFT,        KC_DOWN,        KC_RIGHT
+        KC_TAB,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
+        HYPER_ESC,       KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
+        KC_LSHIFT,       KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_UP,          RETURN_SHIFT,
+        DYN_MACRO_PLAY1, KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_SLASH,       KC_LEFT,        KC_DOWN,        KC_RIGHT
   ),
 
     [_LOWER] = LAYOUT_planck_grid(
-        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LPRN,        KC_RPRN,        KC_7,           KC_8,           KC_9,
-        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_BSLASH,      KC_LBRACKET,    KC_RBRACKET,    KC_4,           KC_5,           KC_6,
-        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_GRAVE,       KC_MINUS,       KC_EQUAL,       KC_1,           KC_2,           KC_3,
-        DYN_MACRO_PLAY1, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_0,           KC_DOT
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LPRN,        KC_RPRN,        KC_7,           KC_8,           KC_9,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_BSLASH,      KC_LBRACKET,    KC_RBRACKET,    KC_4,           KC_5,           KC_6,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_GRAVE,       KC_MINUS,       KC_EQUAL,       KC_1,           KC_2,           KC_3,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_0,           KC_DOT
     ),
 
     [_RAISE] = LAYOUT_planck_grid(
@@ -101,13 +94,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HYPER_ALFRED,   KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
     ),
 
-    [_TEXT_EDIT] = LAYOUT_planck_grid(
-        KC_TRANSPARENT, KC_TRANSPARENT, TE_SEL_WORD,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TE_XC_MLU,      TE_XC_MLD,      KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TE_XC_OND,      TE_XC_IND,      TE_SEL_LINE,    KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
-    ),
-
 };
 
 extern rgb_config_t rgb_matrix_config;
@@ -127,7 +113,7 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {112,218,204}, {112,218,204}, {139,217,213}, {139,217,213}, {139,217,213},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {042,217,230}, {214,218,204}, {214,218,204}, {139,217,213}, {139,217,213}, {139,217,213},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {042,217,230}, {127,201,219}, {127,201,219}, {139,220,213}, {139,217,213}, {139,217,213},
-        {026,200,242}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {139,217,213}, {139,217,213} },
+        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {139,217,213}, {139,217,213} },
 
     [_RAISE] = {
         {025,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255},
@@ -146,12 +132,6 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
         {000,000,000}, {000,000,000}, {188,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {188,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {188,255,255},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
-
-    [_TEXT_EDIT] = {
-        {000,000,000}, {000,000,000}, {000,000,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {214,255,204}, {214,255,204}, {000,000,000}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {214,218,204}, {214,218,204}, {000,000,255}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
 };
 
 void set_layer_color(int layer) {
@@ -179,7 +159,6 @@ void rgb_matrix_indicators_user(void) {
         case _RAISE:
         case _ADJUST:
         case _HYPER:
-        case _TEXT_EDIT:
             set_layer_color(enabled_layer);
             break;
 
@@ -192,28 +171,18 @@ void rgb_matrix_indicators_user(void) {
     }
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case TE_SEL_WORD: te_select_word(record->event.pressed);
-            break;
-
-        case TE_SEL_LINE: te_select_line(record->event.pressed);
-            break;
-
-        case TE_XC_IND: te_indent(record->event.pressed);
-            break;
-
-        case TE_XC_OND: te_outdent(record->event.pressed);
-            break;
-
-        case TE_XC_MLD: te_move_line_down(record->event.pressed);
-            break;
-
-        case TE_XC_MLU: te_move_line_up(record->event.pressed);
-            break;
-    }
-    return true;
-}
+// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+//     switch (keycode) {
+//         case MY_NEW_KEYCODE:
+//             if (record->event.pressed) {
+//                 // Handle Key Down
+//             } else {
+//                 // Handle Key Up
+//             }
+//             break;
+//     }
+//     return true;
+// }
 
 #ifdef AUDIO_ENABLE
 bool muse_mode = false;
