@@ -18,6 +18,8 @@ enum planck_layers {
     _HYPER,
 };
 
+#define JC_SS_HYPER(_string_) SS_RGUI(SS_RALT(SS_RCTL(SS_RSFT(_string_))))
+
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 
@@ -63,14 +65,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
         HYPER_ESC,       KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
         KC_LSHIFT,       KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_UP,          RETURN_SHIFT,
-        DYN_MACRO_PLAY1, KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_SLASH,       KC_LEFT,        KC_DOWN,        KC_RIGHT
+        KC_LEAD,         KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_SLASH,       KC_LEFT,        KC_DOWN,        KC_RIGHT
   ),
 
     [_LOWER] = LAYOUT_planck_grid(
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LPRN,        KC_RPRN,        KC_7,           KC_8,           KC_9,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_BSLASH,      KC_LBRACKET,    KC_RBRACKET,    KC_4,           KC_5,           KC_6,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_GRAVE,       KC_MINUS,       KC_EQUAL,       KC_1,           KC_2,           KC_3,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_0,           KC_DOT
+        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_LPRN,        KC_RPRN,        KC_7,           KC_8,           KC_9,
+        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_BSLASH,      KC_LBRACKET,    KC_RBRACKET,    KC_4,           KC_5,           KC_6,
+        KC_TRANSPARENT,  KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_GRAVE,       KC_MINUS,       KC_EQUAL,       KC_1,           KC_2,           KC_3,
+        DYN_MACRO_PLAY1, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_0,           KC_DOT
     ),
 
     [_RAISE] = LAYOUT_planck_grid(
@@ -113,7 +115,7 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {112,218,204}, {112,218,204}, {139,217,213}, {139,217,213}, {139,217,213},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {042,217,230}, {214,218,204}, {214,218,204}, {139,217,213}, {139,217,213}, {139,217,213},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {042,217,230}, {127,201,219}, {127,201,219}, {139,220,213}, {139,217,213}, {139,217,213},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {139,217,213}, {139,217,213} },
+        {026,245,180}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {139,217,213}, {139,217,213} },
 
     [_RAISE] = {
         {025,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255},
@@ -192,7 +194,49 @@ uint8_t muse_offset = 70;
 uint16_t muse_tempo = 50;
 #endif
 
+LEADER_EXTERNS();
+
 void matrix_scan_user(void) {
+
+LEADER_DICTIONARY() {
+    leading = false;
+    leader_end();
+
+    // Alfred
+    SEQ_ONE_KEY(KC_SPACE) {
+        // Open Alfred
+        // CMD+ALT+CTRL+Shift+Space
+        SEND_STRING(JC_SS_HYPER(SS_TAP(X_SPACE)));
+    }
+    SEQ_ONE_KEY(KC_S) {
+        // Open Alfred in Spell mode
+        // CMD+ALT+CTRL+Shift+S
+        SEND_STRING(JC_SS_HYPER("s"));
+    }
+    SEQ_ONE_KEY(KC_V) {
+        // Open Alfred in Clipboard mode
+        // CMD+ALT+CTRL+Shift+V
+        SEND_STRING(JC_SS_HYPER("v"));
+    }
+
+    // Text Editing
+    SEQ_TWO_KEYS(KC_C, KC_A) {
+        // Copy All
+        // CMD+A CMD+C
+        SEND_STRING(SS_RGUI("a") SS_RGUI("c"));
+    }
+    SEQ_TWO_KEYS(KC_S, KC_W) {
+        // Select Word
+        // ALT+Right ALT+Shift+Left
+        SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+    }
+    SEQ_TWO_KEYS(KC_S, KC_L) {
+        // Select Line
+        // CMD+Right CMD+Shift+Left
+        SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+    }
+  }
+
 #ifdef AUDIO_ENABLE
     if (muse_mode) {
         if (muse_counter == 0) {
