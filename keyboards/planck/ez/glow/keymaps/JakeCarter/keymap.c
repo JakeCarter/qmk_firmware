@@ -3,6 +3,7 @@
 #include "muse.h"
 #endif
 #include "eeprom.h"
+#include "g/keymap_combo.h"
 
 #include "text_edit_helpers.h"
 
@@ -34,25 +35,28 @@ enum planck_layers {
 #define HYPER_SPELL RALT(RGUI(RCTL(RSFT(KC_S))))
 #define HYPER_CLPBRD RALT(RGUI(RCTL(RSFT(KC_V))))
 #define HYPER_ALFRED RALT(RGUI(RCTL(RSFT(KC_SPACE))))
-
 #define LOCK RGUI(RCTL(KC_Q))
 
 // Same as `ko_make_basic()` but doesn't suppress the trigger_mods
 #define jc_ko_make_basic(trigger_mods_, trigger_key, replacement_key) \
-((const key_override_t){                                                                \
-    .trigger_mods                           = (trigger_mods_),                          \
-    .layers                                 = (~0),                                     \
-    .suppressed_mods                        = (0),                                      \
-    .options                                = (ko_options_default),                     \
-    .negative_mod_mask                      = (0),                                      \
-    .custom_action                          = NULL,                                     \
-    .context                                = NULL,                                     \
-    .trigger                                = (trigger_key),                            \
-    .replacement                            = (replacement_key),                        \
-    .enabled                                = NULL                                      \
+((const key_override_t){                                              \
+    .trigger_mods                           = (trigger_mods_),        \
+    .layers                                 = (~0),                   \
+    .suppressed_mods                        = (0),                    \
+    .options                                = (ko_options_default),   \
+    .negative_mod_mask                      = (0),                    \
+    .custom_action                          = NULL,                   \
+    .context                                = NULL,                   \
+    .trigger                                = (trigger_key),          \
+    .replacement                            = (replacement_key),      \
+    .enabled                                = NULL                    \
 })
 
-// Replace HYPER_ESC with Shift+Tab if GUI is held down
+//
+// Replace HYPER_ESC with Shift+Tab if GUI is held down, resulting in CMD+Shift+Tab; Previous App in App Switcher
+//
+// Using CMD+Shift+Tab instead of CMD+` because CMD+` only works after App Switcher has been activated.
+// CMD+Shift+Tab can activate the App Switcher and move to the previous app in one key combo.
 const key_override_t key_override_hyper_esc = jc_ko_make_basic(MOD_MASK_GUI, HYPER_ESC, RSFT(KC_TAB));
 
 // This globally defines all key overrides to be used
