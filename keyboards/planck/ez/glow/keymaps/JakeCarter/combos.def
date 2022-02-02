@@ -20,6 +20,3 @@ SUBS(FV_PST, SS_LGUI("v"),          KC_F, KC_V) /* Paste; CMD+V */
 
 SUBS(UI_XCN, SS_LCTL(SS_TAP(X_BSLASH)), KC_U, KC_I) /* Xcode Jump to Next Change; CTRL+\ */
 SUBS(YU_XCP, SS_LCTL("|"),              KC_Y, KC_U) /* Xcode Jump to Previous Change; CTRL+Shift+\ */
-
-SUBS(WE_SLW,  SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))), KC_W, KC_E)       /* Select Word; ALT+Right, ALT+Shift+Left */
-SUBS(WER_SLL, SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))), KC_W, KC_E, KC_R) /* Select Line; CMD+Right, CMD+Shift+Left */
