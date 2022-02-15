@@ -6,7 +6,10 @@ VPATH += keyboards/gboards
 
 CONSOLE_ENABLE = no
 COMMAND_ENABLE = no
+
 AUDIO_ENABLE = no
+AUDIO_DRIVER = dac_basic
+
 MOUSEKEY_ENABLE = no
 DYNAMIC_MACRO_ENABLE = yes
 KEY_OVERRIDE_ENABLE = yes

@@ -6,9 +6,10 @@
 #include "g/keymap_combo.h"
 
 
-// enum planck_keycodes {
-//     MY_NEW_KEYCODE = EZ_SAFE_RANGE,
-// };
+enum planck_keycodes {
+    TMP_SCALE_SONG = EZ_SAFE_RANGE,
+    TMP_SONG_ERROR,
+};
 
 enum planck_layers {
     _BASE,
@@ -31,6 +32,11 @@ enum planck_layers {
 #define RETURN_SHIFT MT(MOD_RSFT, KC_ENTER)
 
 #define LOCK RGUI(RCTL(KC_Q))
+
+#ifdef AUDIO_ENABLE
+float song_scale[][2] = SONG(SCALE_SOUND);
+float song_error[][2] = SONG(ERROR_SOUND);
+#endif
 
 // Same as `ko_make_basic()` but doesn't suppress the trigger_mods
 #define jc_ko_make_basic(trigger_mods_, trigger_key, replacement_key) \
@@ -84,8 +90,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_ADJUST] = LAYOUT_planck_grid(
         KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,          KC_F6,          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,         KC_F12,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RGB_TOG,        RGB_VAI,        RGB_VAD,        KC_TRANSPARENT, RESET,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, RGB_MOD,        RGB_HUI,        RGB_HUD,        KC_TRANSPARENT, KC_TRANSPARENT,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, AU_TOG,         KC_TRANSPARENT, KC_TRANSPARENT, RGB_TOG,        RGB_VAI,        RGB_VAD,        KC_TRANSPARENT, RESET,
+        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TMP_SONG_ERROR, TMP_SCALE_SONG, KC_TRANSPARENT, KC_TRANSPARENT, RGB_MOD,        RGB_HUI,        RGB_HUD,        KC_TRANSPARENT, KC_TRANSPARENT,
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
     ),
 
@@ -125,7 +131,7 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
 
     [_ADJUST] = {
         {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255}, {000,000,255},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {044,143,255}, {044,143,255}, {044,143,255}, {000,000,000}, {026,255,255},
+        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {044,143,255}, {000,000,000}, {000,000,000}, {044,143,255}, {044,143,255}, {044,143,255}, {000,000,000}, {026,255,255},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {044,143,255}, {044,143,255}, {044,143,255}, {000,000,000}, {000,000,000},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
 
@@ -173,18 +179,27 @@ void rgb_matrix_indicators_user(void) {
     }
 }
 
-// bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-//     switch (keycode) {
-//         case MY_NEW_KEYCODE:
-//             if (record->event.pressed) {
-//                 // Handle Key Down
-//             } else {
-//                 // Handle Key Up
-//             }
-//             break;
-//     }
-//     return true;
-// }
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+#ifdef AUDIO_ENABLE
+        case TMP_SCALE_SONG:
+            if (record->event.pressed) {
+                // Handle Key Down
+                PLAY_SONG(song_scale);
+            } else {
+                // Handle Key Up
+            }
+            break;
+        case TMP_SONG_ERROR:
+            if (record->event.pressed) {
+                PLAY_SONG(song_error);
+            }
+#endif
+        default:
+            break;
+    }
+    return true;
+}
 
 #ifdef AUDIO_ENABLE
 bool muse_mode = false;
