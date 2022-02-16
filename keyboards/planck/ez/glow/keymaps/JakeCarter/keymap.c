@@ -265,7 +265,19 @@ LEADER_DICTIONARY() {
         // CMD+Right CMD+Shift+Left CMD+C
         SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
     }
-  }
+
+    // VIM-ish Commands
+    SEQ_TWO_KEYS(KC_V, KC_O) {
+        // New Line Below
+        // CMD+Right Return
+        SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
+    }
+    SEQ_THREE_KEYS(KC_V, KC_O, KC_O) {
+        // New Line Above
+        // CMD+Left Return Up
+        SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
+    }
+}
 
 #ifdef AUDIO_ENABLE
     if (muse_mode) {
