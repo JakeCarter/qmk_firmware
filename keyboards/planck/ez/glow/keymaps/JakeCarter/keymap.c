@@ -1,7 +1,4 @@
 #include QMK_KEYBOARD_H
-#ifdef AUDIO_ENABLE
-#include "muse.h"
-#endif
 #include "eeprom.h"
 #include "g/keymap_combo.h"
 
@@ -201,110 +198,76 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-#ifdef AUDIO_ENABLE
-bool muse_mode = false;
-uint8_t last_muse_note = 0;
-uint16_t muse_counter = 0;
-uint8_t muse_offset = 70;
-uint16_t muse_tempo = 50;
-#endif
 
 LEADER_EXTERNS();
 
 void matrix_scan_user(void) {
+    LEADER_DICTIONARY() {
+        leading = false;
+        leader_end();
 
-LEADER_DICTIONARY() {
-    leading = false;
-    leader_end();
-
-    // Alfred
-    SEQ_ONE_KEY(KC_A) {
-        // Open Alfred
-        // CMD+ALT+CTRL+Shift+Space
-        SEND_STRING(JC_SS_HYPER(SS_TAP(X_SPACE)));
-    }
-    SEQ_TWO_KEYS(KC_A, KC_S) {
-        // Open Alfred in Spell mode
-        // CMD+ALT+CTRL+Shift+S
-        SEND_STRING(JC_SS_HYPER("s"));
-    }
-    SEQ_TWO_KEYS(KC_A, KC_C) {
-        // Open Alfred in Clipboard mode
-        // CMD+ALT+CTRL+Shift+V
-        SEND_STRING(JC_SS_HYPER("v"));
-    }
-
-    // Text Editing
-    SEQ_TWO_KEYS(KC_S, KC_A) {
-        // Select All
-        // CMD+A
-        SEND_STRING(SS_RGUI("a"));
-    }
-    SEQ_THREE_KEYS(KC_S, KC_A, KC_A) {
-        // Select All; Copy
-        // CMD+A CMD+C
-        SEND_STRING(SS_RGUI("a") SS_RGUI("c"));
-    }
-    SEQ_TWO_KEYS(KC_S, KC_W) {
-        // Select Word
-        // ALT+Right ALT+Shift+Left
-        SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
-    }
-    SEQ_THREE_KEYS(KC_S, KC_W, KC_W) {
-        // Select Word; Copy
-        // ALT+Right ALT+Shift+Left CMD+C
-        SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
-    }
-    SEQ_TWO_KEYS(KC_S, KC_L) {
-        // Select Line
-        // CMD+Right CMD+Shift+Left
-        SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
-    }
-    SEQ_THREE_KEYS(KC_S, KC_L, KC_L) {
-        // Select Line; Copy
-        // CMD+Right CMD+Shift+Left CMD+C
-        SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
-    }
-
-    // VIM-ish Commands
-    SEQ_TWO_KEYS(KC_V, KC_O) {
-        // New Line Below
-        // CMD+Right Return
-        SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
-    }
-    SEQ_THREE_KEYS(KC_V, KC_O, KC_O) {
-        // New Line Above
-        // CMD+Left Return Up
-        SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
-    }
-}
-
-#ifdef AUDIO_ENABLE
-    if (muse_mode) {
-        if (muse_counter == 0) {
-            uint8_t muse_note = muse_offset + SCALE[muse_clock_pulse()];
-            if (muse_note != last_muse_note) {
-                stop_note(compute_freq_for_midi_note(last_muse_note));
-                play_note(compute_freq_for_midi_note(muse_note), 0xF);
-                last_muse_note = muse_note;
-            }
+        // Alfred
+        SEQ_ONE_KEY(KC_A) {
+            // Open Alfred
+            // CMD+ALT+CTRL+Shift+Space
+            SEND_STRING(JC_SS_HYPER(SS_TAP(X_SPACE)));
         }
-        muse_counter = (muse_counter + 1) % muse_tempo;
-    }
-#endif
-}
+        SEQ_TWO_KEYS(KC_A, KC_S) {
+            // Open Alfred in Spell mode
+            // CMD+ALT+CTRL+Shift+S
+            SEND_STRING(JC_SS_HYPER("s"));
+        }
+        SEQ_TWO_KEYS(KC_A, KC_C) {
+            // Open Alfred in Clipboard mode
+            // CMD+ALT+CTRL+Shift+V
+            SEND_STRING(JC_SS_HYPER("v"));
+        }
 
-#ifdef AUDIO_ENABLE
-bool music_mask_user(uint16_t keycode) {
-    switch (keycode) {
-        case RAISE:
-        case LOWER:
-            return false;
-        default:
-            return true;
+        // Text Editing
+        SEQ_TWO_KEYS(KC_S, KC_A) {
+            // Select All
+            // CMD+A
+            SEND_STRING(SS_RGUI("a"));
+        }
+        SEQ_THREE_KEYS(KC_S, KC_A, KC_A) {
+            // Select All; Copy
+            // CMD+A CMD+C
+            SEND_STRING(SS_RGUI("a") SS_RGUI("c"));
+        }
+        SEQ_TWO_KEYS(KC_S, KC_W) {
+            // Select Word
+            // ALT+Right ALT+Shift+Left
+            SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+        }
+        SEQ_THREE_KEYS(KC_S, KC_W, KC_W) {
+            // Select Word; Copy
+            // ALT+Right ALT+Shift+Left CMD+C
+            SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
+        }
+        SEQ_TWO_KEYS(KC_S, KC_L) {
+            // Select Line
+            // CMD+Right CMD+Shift+Left
+            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+        }
+        SEQ_THREE_KEYS(KC_S, KC_L, KC_L) {
+            // Select Line; Copy
+            // CMD+Right CMD+Shift+Left CMD+C
+            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
+        }
+
+        // VIM-ish Commands
+        SEQ_TWO_KEYS(KC_V, KC_O) {
+            // New Line Below
+            // CMD+Right Return
+            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
+        }
+        SEQ_THREE_KEYS(KC_V, KC_O, KC_O) {
+            // New Line Above
+            // CMD+Left Return Up
+            SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
+        }
     }
 }
-#endif
 
 uint32_t layer_state_set_user(uint32_t state) {
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);

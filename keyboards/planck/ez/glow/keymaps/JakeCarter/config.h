@@ -1,5 +1,6 @@
 #pragma once
 
+#define NO_MUSIC_MODE
 #ifdef AUDIO_ENABLE
 
 // Something is broken with tempo. Using the standard 120 tempo produces songs that play entirely too fast.
