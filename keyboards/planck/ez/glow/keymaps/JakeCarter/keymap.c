@@ -212,15 +212,20 @@ void matrix_scan_user(void) {
             // CMD+ALT+CTRL+Shift+Space
             SEND_STRING(JC_SS_HYPER(SS_TAP(X_SPACE)));
         }
-        SEQ_TWO_KEYS(KC_A, KC_S) {
+        SEQ_TWO_KEYS(KC_S, KC_P) {
             // Open Alfred in Spell mode
             // CMD+ALT+CTRL+Shift+S
             SEND_STRING(JC_SS_HYPER("s"));
         }
-        SEQ_TWO_KEYS(KC_A, KC_C) {
+        SEQ_TWO_KEYS(KC_C, KC_L) {
             // Open Alfred in Clipboard mode
             // CMD+ALT+CTRL+Shift+V
             SEND_STRING(JC_SS_HYPER("v"));
+        }
+        SEQ_TWO_KEYS(KC_D, KC_D) {
+            // Open Alfred to Derived Data
+            // CMD+ALT+CTRL+Shift+V
+            SEND_STRING(JC_SS_HYPER("d"));
         }
 
         // Text Editing
@@ -256,12 +261,12 @@ void matrix_scan_user(void) {
         }
 
         // VIM-ish Commands
-        SEQ_TWO_KEYS(KC_V, KC_O) {
+        SEQ_TWO_KEYS(KC_L, KC_B) {
             // New Line Below
             // CMD+Right Return
             SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
         }
-        SEQ_THREE_KEYS(KC_V, KC_O, KC_O) {
+        SEQ_TWO_KEYS(KC_L, KC_A) {
             // New Line Above
             // CMD+Left Return Up
             SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
