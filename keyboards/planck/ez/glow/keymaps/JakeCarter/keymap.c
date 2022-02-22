@@ -252,24 +252,41 @@ void matrix_scan_user(void) {
         SEQ_TWO_KEYS(KC_S, KC_L) {
             // Select Line
             // CMD+Right CMD+Shift+Left
-            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+            SEND_STRING(SS_RGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
         }
         SEQ_THREE_KEYS(KC_S, KC_L, KC_L) {
             // Select Line; Copy
             // CMD+Right CMD+Shift+Left CMD+C
-            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
+            SEND_STRING(SS_RGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
         }
 
         // VIM-ish Commands
         SEQ_TWO_KEYS(KC_L, KC_B) {
             // New Line Below
             // CMD+Right Return
-            SEND_STRING(SS_LGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
+            SEND_STRING(SS_RGUI(SS_TAP(X_RIGHT)) SS_TAP(X_ENTER));
         }
         SEQ_TWO_KEYS(KC_L, KC_A) {
             // New Line Above
             // CMD+Left Return Up
-            SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
+            SEND_STRING(SS_RGUI(SS_TAP(X_LEFT)) SS_TAP(X_ENTER) SS_TAP(X_UP));
+        }
+
+        // App Commands
+        SEQ_ONE_KEY(KC_S) {
+            // Save
+            // CMD+S
+            SEND_STRING(SS_RGUI("s"));
+        }
+        SEQ_TWO_KEYS(KC_Q, KC_A) {
+            // Quit App
+            // CMD+Q
+            SEND_STRING(SS_RGUI("q"));
+        }
+        SEQ_TWO_KEYS(KC_C, KC_W) {
+            // Close Window
+            // CMD+W
+            SEND_STRING(SS_RGUI("w"));
         }
     }
 }
