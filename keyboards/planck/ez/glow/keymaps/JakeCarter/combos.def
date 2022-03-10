@@ -5,18 +5,18 @@
 // cause compilation issues if they contain forward or backward slashes.
 //
 
-//   name    result                 chord keys
-SUBS(DF_IND, SS_LGUI("]"),          KC_D, KC_F) /* Indent; CMD+] */
-SUBS(CV_OUD, SS_LGUI("["),          KC_C, KC_V) /* Outdent; CMD+[ */
+//   name       result                         chord keys
+SUBS(DF_IND,    SS_LGUI("]"),                  KC_D, KC_F) /* Indent; CMD+] */
+SUBS(CV_OUD,    SS_LGUI("["),                  KC_C, KC_V) /* Outdent; CMD+[ */
 
-SUBS(DV_MLD, SS_LGUI(SS_LALT("]")), KC_D, KC_V) /* Move Line Down; CMD+ALT+] */
-SUBS(CF_MLU, SS_LGUI(SS_LALT("[")), KC_C, KC_F) /* Move Line Up; CMD+ALT+[ */
+SUBS(DV_MLD,    SS_LGUI(SS_LALT("]")),         KC_D, KC_V) /* Move Line Down; CMD+ALT+] */
+SUBS(CF_MLU,    SS_LGUI(SS_LALT("[")),         KC_C, KC_F) /* Move Line Up; CMD+ALT+[ */
 
-SUBS(AZ_UND, SS_LGUI("z"),          KC_A, KC_Z) /* Undo; CMD+Z */
+SUBS(AZ_UND,    SS_LGUI("z"),                  KC_A, KC_Z) /* Undo; CMD+Z */
 
-SUBS(SX_CUT, SS_LGUI("x"),          KC_S, KC_X) /* Cut; CMD+X */
-SUBS(DC_CPY, SS_LGUI("c"),          KC_D, KC_C) /* Copy; CMD+C */
-SUBS(FV_PST, SS_LGUI("v"),          KC_F, KC_V) /* Paste; CMD+V */
+SUBS(SX_CUT,    SS_LGUI("x"),                  KC_S, KC_X) /* Cut; CMD+X */
+SUBS(DC_CPY,    SS_LGUI("c"),                  KC_D, KC_C) /* Copy; CMD+C */
+SUBS(FV_PST,    SS_LGUI("v"),                  KC_F, KC_V) /* Paste; CMD+V */
 
-SUBS(UI_XCN, SS_LCTL(SS_TAP(X_BSLASH)), KC_U, KC_I) /* Xcode Jump to Next Change; CTRL+\ */
-SUBS(YU_XCP, SS_LCTL("|"),              KC_Y, KC_U) /* Xcode Jump to Previous Change; CTRL+Shift+\ */
+SUBS(UI_XCN,    SS_LCTL(SS_TAP(X_BSLASH)),     KC_U, KC_I) /* Xcode Jump to Next Change; CTRL+\ */
+SUBS(YU_XCP,    SS_LCTL("|"),                  KC_Y, KC_U) /* Xcode Jump to Previous Change; CTRL+Shift+\ */
