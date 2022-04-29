@@ -13,18 +13,12 @@ enum planck_layers {
     _LOWER,
     _RAISE,
     _ADJUST,
-    _HYPER,
 };
 
 #define JC_SS_HYPER(_string_) SS_RGUI(SS_RALT(SS_RCTL(SS_RSFT(_string_))))
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
-
-#define HYPER_ESC LT(_HYPER, KC_ESCAPE)
-#define HYPER_SPELL RALT(RGUI(RCTL(RSFT(KC_S))))
-#define HYPER_CLPBRD RALT(RGUI(RCTL(RSFT(KC_V))))
-#define HYPER_ALFRED RALT(RGUI(RCTL(RSFT(KC_SPACE))))
 
 #define RETURN_SHIFT MT(MOD_RSFT, KC_ENTER)
 
@@ -51,22 +45,22 @@ float song_error[][2] = SONG(ERROR_SOUND);
 })
 
 //
-// Replace HYPER_ESC with Shift+Tab if GUI is held down, resulting in CMD+Shift+Tab; Previous App in App Switcher
+// Replace KC_ESCAPE with Shift+Tab if GUI is held down, resulting in CMD+Shift+Tab; Previous App in App Switcher
 //
 // Using CMD+Shift+Tab instead of CMD+` because CMD+` only works after App Switcher has been activated.
 // CMD+Shift+Tab can activate the App Switcher and move to the previous app in one key combo.
-const key_override_t key_override_hyper_esc = jc_ko_make_basic(MOD_MASK_GUI, HYPER_ESC, RSFT(KC_TAB));
+const key_override_t key_override_escape = jc_ko_make_basic(MOD_MASK_GUI, KC_ESCAPE, RSFT(KC_TAB));
 
 // This globally defines all key overrides to be used
 const key_override_t **key_overrides = (const key_override_t *[]){
-    &key_override_hyper_esc,
+    &key_override_escape,
     NULL
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT_planck_grid(
         KC_TAB,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
-        HYPER_ESC,       KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
+        KC_ESCAPE,       KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
         KC_LSHIFT,       KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       RETURN_SHIFT,
         KC_LEAD,         KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_UP,          KC_LEFT,        KC_DOWN,        KC_RIGHT
   ),
@@ -90,13 +84,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, AU_TOG,         KC_TRANSPARENT, KC_TRANSPARENT, RGB_TOG,        RGB_VAI,        RGB_VAD,        KC_TRANSPARENT, RESET,
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, TMP_SONG_ERROR, TMP_SCALE_SONG, KC_TRANSPARENT, KC_TRANSPARENT, RGB_MOD,        RGB_HUI,        RGB_HUD,        KC_TRANSPARENT, KC_TRANSPARENT,
         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
-    ),
-
-    [_HYPER] = LAYOUT_planck_grid(
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, HYPER_SPELL,    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HYPER_CLPBRD,   KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,
-        KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, HYPER_ALFRED,   KC_NO,          KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT
     ),
 
 };
@@ -131,12 +118,6 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {044,143,255}, {000,000,000}, {000,000,000}, {044,143,255}, {044,143,255}, {044,143,255}, {000,000,000}, {026,255,255},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {044,143,255}, {044,143,255}, {044,143,255}, {000,000,000}, {000,000,000},
         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {000,000,000},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
-
-    [_HYPER] = {
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {188,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {188,255,255}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},
-        {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000},        {188,255,255},         {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000}, {000,000,000} },
 };
 
 void set_layer_color(int layer) {
@@ -163,7 +144,6 @@ void rgb_matrix_indicators_user(void) {
         case _LOWER:
         case _RAISE:
         case _ADJUST:
-        case _HYPER:
             set_layer_color(enabled_layer);
             break;
 
