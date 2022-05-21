@@ -1,10 +1,12 @@
 #include QMK_KEYBOARD_H
 #include "eeprom.h"
 #include "g/keymap_combo.h"
+#include "features/leader.h"
 
 enum planck_keycodes {
     TMP_SCALE_SONG = EZ_SAFE_RANGE,
     TMP_SONG_ERROR,
+    JC_LEADER,
 };
 
 enum planck_layers {
@@ -61,7 +63,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,          KC_Q,           KC_W,           KC_E,           KC_R,           KC_T,           KC_Y,           KC_U,           KC_I,           KC_O,           KC_P,           KC_BSPACE,
         KC_ESCAPE,       KC_A,           KC_S,           KC_D,           KC_F,           KC_G,           KC_H,           KC_J,           KC_K,           KC_L,           KC_SCOLON,      KC_QUOTE,
         KC_LSHIFT,       KC_Z,           KC_X,           KC_C,           KC_V,           KC_B,           KC_N,           KC_M,           KC_COMMA,       KC_DOT,         KC_SLASH,       RETURN_SHIFT,
-        KC_NO,           KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_UP,          KC_LEFT,        KC_DOWN,        KC_RIGHT
+        JC_LEADER,       KC_LCTRL,       KC_LALT,        KC_LGUI,        LOWER,          KC_SPACE,       KC_NO,          RAISE,          KC_UP,          KC_LEFT,        KC_DOWN,        KC_RIGHT
   ),
 
     [_LOWER] = LAYOUT_planck_grid(
@@ -156,6 +158,10 @@ void rgb_matrix_indicators_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if (!process_leader(keycode, record)) {
+        return false;
+    }
+
     switch (keycode) {
 #ifdef AUDIO_ENABLE
         case TMP_SCALE_SONG:
@@ -171,6 +177,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 PLAY_SONG(song_error);
             }
 #endif
+        case JC_LEADER:
+            if (record->event.pressed) {
+                start_leading();
+            }
+            return false;
+            break;
         default:
             break;
     }
@@ -181,4 +193,115 @@ uint32_t layer_state_set_user(uint32_t state) {
     return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
+void *leader_select_all_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_C:
+            // Select All; Copy
+            // CMD+A CMD+C
+            SEND_STRING(SS_RGUI("a") SS_RGUI("c"));
+            return NULL;
 
+        case KC_ENTER: // Accept
+            // Select All
+            // CMD+A
+            SEND_STRING(SS_RGUI("a"));
+            return NULL;
+
+        default:
+            return NULL;
+    }
+}
+
+void *leader_select_word_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_C:
+            // Select Word; Copy
+            // ALT+Right ALT+Shift+Left CMD+C
+            SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
+            return NULL;
+        case KC_ENTER: // Accept
+            // Select Word
+            // ALT+Right ALT+Shift+Left
+            SEND_STRING(SS_LALT(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+            return NULL;
+        default:
+            return NULL;
+    }
+}
+
+void *leader_select_line_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_C:
+            // Select Line; Copy
+            // CMD+Right CMD+Shift+Left CMD+C
+            SEND_STRING(SS_RGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))) SS_RGUI("c"));
+            return NULL;
+        case KC_ENTER: // Accept
+            // Select Line
+            // CMD+Right CMD+Shift+Left
+            SEND_STRING(SS_RGUI(SS_TAP(X_RIGHT) SS_LSFT(SS_TAP(X_LEFT))));
+            return NULL;
+        default:
+            return NULL;
+    }
+}
+
+void *leader_s_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_A:
+            return leader_select_all_func;
+        case KC_P:
+            // Open Alfred in Spell mode
+            // CMD+ALT+CTRL+Shift+S
+            SEND_STRING(JC_SS_HYPER("s"));
+            return NULL;
+        case KC_W:
+            return leader_select_word_func;
+        case KC_L:
+            return leader_select_line_func;
+        default:
+            return NULL;
+    }
+}
+
+void *leader_c_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_L:
+            // Open Alfred in Clipboard mode
+            // CMD+ALT+CTRL+Shift+V
+            SEND_STRING(JC_SS_HYPER("v"));
+            return NULL;
+        default:
+            return NULL;
+    }
+}
+
+void *leader_d_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_D:
+            // Open Alfred to Derived Data
+            // CMD+ALT+CTRL+Shift+V
+            SEND_STRING(JC_SS_HYPER("d"));
+            return NULL;
+        default:
+            return NULL;
+    }
+}
+
+void *leader_start_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_S:
+            return leader_s_func;
+        case KC_A:
+            // Open Alfred
+            // CMD+ALT+CTRL+Shift+Space
+            SEND_STRING(JC_SS_HYPER(SS_TAP(X_SPACE)));
+            return NULL;
+        case KC_C:
+            return leader_c_func;
+        case KC_D:
+            return leader_d_func;
+        default:
+            return NULL;
+    }
+}
