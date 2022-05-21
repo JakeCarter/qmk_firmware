@@ -1,5 +1,6 @@
 SRC += muse.c
 SRC += features/leader.c
+include $(KEYBOARD_PATH_2)/glow/keymaps/$(KEYMAP)/qmk-vim/rules.mk
 
 # Set any rules.mk overrides for your specific keymap here.
 # See rules at https://docs.qmk.fm/#/config_options?id=the-rulesmk-file

@@ -2,6 +2,7 @@
 #include "eeprom.h"
 #include "g/keymap_combo.h"
 #include "features/leader.h"
+#include "qmk-vim/src/vim.h"
 
 enum planck_keycodes {
     TMP_SCALE_SONG = EZ_SAFE_RANGE,
@@ -162,6 +163,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
+    if (!process_vim_mode(keycode, record)) {
+        return false;
+    }
+
     switch (keycode) {
 #ifdef AUDIO_ENABLE
         case TMP_SCALE_SONG:
@@ -301,6 +306,9 @@ void *leader_start_func(uint16_t keycode) {
             return leader_c_func;
         case KC_D:
             return leader_d_func;
+        case KC_V:
+            toggle_vim_mode();
+            return NULL;
         default:
             return NULL;
     }
