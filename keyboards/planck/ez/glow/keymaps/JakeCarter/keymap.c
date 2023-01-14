@@ -18,12 +18,14 @@ enum planck_layers {
     _LOWER,
     _RAISE,
     _ADJUST,
+    _ARROWS,
 };
 
 #define JC_SS_HYPER(_string_) SS_RGUI(SS_RALT(SS_RCTL(SS_RSFT(_string_))))
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
+#define ARROWS_TG TG(_ARROWS)
 
 #define RETURN_SHIFT MT(MOD_RSFT, KC_ENTER)
 
@@ -65,7 +67,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESCAPE,  KC_Q,       KC_W,       KC_E,       KC_R,       KC_T,       KC_Y,       KC_U,       KC_I,       KC_O,       KC_P,       KC_BSPACE,
         KC_TAB,     KC_A,       KC_S,       KC_D,       KC_F,       KC_G,       KC_H,       KC_J,       KC_K,       KC_L,       KC_SCOLON,  KC_QUOTE,
         KC_LSHIFT,  KC_Z,       KC_X,       KC_C,       KC_V,       KC_B,       KC_N,       KC_M,       KC_COMMA,   KC_DOT,     KC_SLASH,   RETURN_SHIFT,
-        JC_LEADER,  KC_LCTRL,   KC_LALT,    KC_LGUI,    LOWER,      KC_SPACE,   KC_NO,      RAISE,      KC_UP,      KC_LEFT,    KC_DOWN,    KC_RIGHT
+        JC_LEADER,  KC_LCTRL,   KC_LALT,    KC_LGUI,    LOWER,      KC_SPACE,   KC_NO,      RAISE,      ARROWS_TG,  KC_TRNS,    KC_TRNS,    KC_TRNS
   ),
 
     [_LOWER] = LAYOUT_planck_grid(
@@ -89,6 +91,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_NO,      KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS
     ),
 
+    [_ARROWS] = LAYOUT_planck_grid(
+        KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,
+        KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,
+        KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_UP,      KC_TRNS,
+        KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_TRNS,    KC_NO,      KC_TRNS,    KC_TRNS,    KC_LEFT,    KC_DOWN,    KC_RIGHT
+    ),
 };
 
 extern rgb_config_t rgb_matrix_config;
@@ -141,6 +149,13 @@ const uint8_t PROGMEM ledmap[][DRIVER_LED_TOTAL][3] = {
         CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,            CLR_OFF,        CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF
     },
 
+    [_ARROWS] = {
+        CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,
+        CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,
+        CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_TWO,    CLR_OFF,
+        CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,    CLR_OFF,            CLR_OFF,        CLR_OFF,    CLR_TWELVE, CLR_TWO,    CLR_TWO,    CLR_TWO
+    },
+
 };
 
 void set_layer_color(int layer) {
@@ -167,6 +182,7 @@ void rgb_matrix_indicators_user(void) {
         case _LOWER:
         case _RAISE:
         case _ADJUST:
+        case _ARROWS:
             set_layer_color(enabled_layer);
             break;
 
